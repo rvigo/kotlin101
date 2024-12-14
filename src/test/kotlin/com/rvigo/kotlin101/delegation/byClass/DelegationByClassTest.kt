@@ -44,7 +44,7 @@ class DelegationByClassTest {
     }
 
     @Test
-    fun `should do something`() {
+    fun `should delegate tenured teacher methods to the substitute teacher`() {
         val subject = Subject.MATH
         val teacher = TenuredTeacher(DEFAULT_NAME, subject)
         val substituteTeacherName = "Mary"
