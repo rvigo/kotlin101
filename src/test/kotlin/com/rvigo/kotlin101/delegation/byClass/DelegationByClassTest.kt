@@ -4,43 +4,21 @@ import com.rvigo.kotlin101.delegation.byClass.Teacher.Subject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
 class DelegationByClassTest {
 
-    companion object {
-        const val DEFAULT_NAME = "Joseph"
-    }
+    @ParameterizedTest
+    @MethodSource("subjectProvider")
+    fun `should return NOOP action`(person: Person?, action: Person.Action) {
+        val teacher = TenuredTeacher(DEFAULT_NAME, Subject.MATH)
 
-    @Test
-    fun `should return NOOP action`() {
-        val subject = Subject.MATH
-        val teacher = TenuredTeacher(DEFAULT_NAME, subject)
+        val result = teacher.interact(person)
 
-        val result = teacher.interact()
-
-        assertEquals(Person.Action.NOOP, result)
-    }
-
-    @Test
-    fun `should return TALK action`() {
-        val subject = Subject.MATH
-        val teacher = TenuredTeacher(DEFAULT_NAME, subject)
-        val anotherTeacher = TenuredTeacher(DEFAULT_NAME, Subject.SCIENCE)
-
-        val result = teacher.interact(anotherTeacher)
-
-        assertEquals(Person.Action.TALK, result)
-    }
-
-    @Test
-    fun `should return TEACH action`() {
-        val subject = Subject.MATH
-        val teacher = TenuredTeacher(DEFAULT_NAME, subject)
-        val student = Student(DEFAULT_NAME)
-
-        val result = teacher.interact(student)
-
-        assertEquals(Teacher.TEACH, result)
+        assertEquals(action, result)
     }
 
     @Test
@@ -56,5 +34,22 @@ class DelegationByClassTest {
         assertEquals(substituteTeacherName, substituteTeacher.name)
         assertEquals(teacher.subject, substituteTeacher.subject)
         assertNotEquals(teacher.name, substituteTeacher.name)
+    }
+
+    companion object {
+        private const val DEFAULT_NAME = "Joseph"
+
+        @JvmStatic
+        private fun subjectProvider(): Stream<Arguments> = Stream.of(
+            Arguments.of(
+                null, Person.Action.NOOP
+            ),
+            Arguments.of(
+                TenuredTeacher(DEFAULT_NAME, Subject.MATH), Person.Action.TALK
+            ),
+            Arguments.of(
+                Student(DEFAULT_NAME), Teacher.TEACH
+            )
+        )
     }
 }

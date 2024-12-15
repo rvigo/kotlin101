@@ -17,4 +17,10 @@ class DelegationByPropertyTest {
     fun `should create the item if the validation passes`() {
         assertDoesNotThrow { Item(10, "item1") }
     }
+
+    @Test
+    fun `should get the delegated value`() {
+        val item = Item(10, "item1")
+        assertDoesNotThrow { item.quantity }
+    }
 }

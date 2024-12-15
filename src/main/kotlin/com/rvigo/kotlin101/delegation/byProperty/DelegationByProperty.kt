@@ -18,7 +18,7 @@ class ValidStoredItemsQuantity : ReadWriteProperty<Item, Int> {
 
 // delegates the quantity property to StoredItemsValidation
 class Item private constructor(private var name: String) {
-    private var quantity: Int by ValidStoredItemsQuantity()
+    var quantity: Int by ValidStoredItemsQuantity()
 
     constructor(
         quantity: Int,
